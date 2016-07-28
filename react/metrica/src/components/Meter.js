@@ -1,51 +1,97 @@
 import React from 'react';
 
-function getInchConversions(measurement) {
-  let milimeters = measurement * 25.4;
-  return (
-    {
-      milimeters: milimeters,
-      centimeters: milimeters / 100,
-      meters: milimeters / 1000,
-      kilometers: milimeters / 1000000,
-    }
-  )
-}
+function getLengthConversion(measurement, units, unit) {
+  const getConversion = (measurement, factor) => {
+    let meters = measurement * factor;
+    return (
+      [
+        meters / 1000,
+        meters,
+        meters * 100,
+        meters * 1000,
+      ]
+    )
+  }
 
-function getFootConversions(measurement) {
-  let meters = measurement * 0.3048;
-  return (
-    {
-      meters: meters,
-      centimeters: meters * 100,
-      milimeters: meters * 1000,
-      kilometers: meters / 1000,
-    }
-  )
-}
-
-function getMileConversions(measurement) {
-  let kilometers = measurement * 1.6093;
-  return (
-    {
-      kilometers: kilometers,
-      centimeters: kilometers * 100000,
-      milimeters: kilometers * 1000000,
-      meters: kilometers * 1000,
-    }
-  )
-}
-
-function getConversions(measurement, units, unit) {
   switch (unit) {
     case units.length.inch:
-      return getInchConversions(measurement);
+      return getConversion(measurement, 0.02540);
     case units.length.foot:
-      return getFootConversions(measurement);
+      return getConversion(measurement, 0.30480);
     case units.length.mile:
-      return getMileConversions(measurement);
+      return getConversion(measurement, 1609.34688);
     default:
-      return getInchConversions(measurement);
+      return getConversion(measurement, 0.02540);
+  }
+}
+
+function getWeightConversion(measurement, units, unit) {
+  const getConversion = (measurement, factor) => {
+    let grams = measurement * factor;
+    return (
+      [
+        grams / 1000,
+        grams,
+      ]
+    )
+  }
+
+  switch (unit) {
+    case units.weight.ounce:
+      return getConversion(measurement, 28.34952);
+    case units.weight.pound:
+      return getConversion(measurement, 453.59232);
+    case units.weight.ton:
+      return getConversion(measurement, 907184.64);
+    default:
+      return getConversion(measurement, 28.34952);
+  }
+}
+
+function getVolumeConversion(measurement, units, unit) {
+  const getConversion = (measurement, factor) => {
+    let liter = measurement * factor;
+    return (
+      [
+        liter,
+        liter * 1000,
+      ]
+    )
+  }
+
+  switch (unit) {
+    case units.volume.pint:
+      return getConversion(measurement, 0.47);
+    case units.volume.quart:
+      return getConversion(measurement, 0.96);
+    case units.volume.gallon:
+      return getConversion(measurement, 3.8);
+    default:
+      return getConversion(measurement, 0.47);
+  }
+}
+
+function getTemperatureConversion(measurement) {
+    let celsius = (measurement - 32) * 0.5555555;
+    return (
+      [
+        celsius,
+      ]
+    )
+}
+
+function getConversions(measurement, types, type, units, unit) {
+  switch (type) {
+    case types.length:
+      return getLengthConversion(measurement, units, unit);
+    case types.weight:
+      return getWeightConversion(measurement, units, unit);
+    case types.volume:
+      return getVolumeConversion(measurement, units, unit);
+    case types.temperature:
+      return getTemperatureConversion(measurement);
+    default:
+      return getLengthConversion(measurement, units, unit);
   }
 }
 
@@ -67,25 +113,31 @@ function TypeInput(props) {
   )
 }
 
-function UnitInput(props) {
-  let unitType = 0;
-  switch (props.type) {
-    case props.types.length:
-      unitType = props.unitLabels.length;
+function getUnitLabelTypeByMeasurementType(types, type, unitLabels) {
+  let unitLabelType = 0;
+  switch (type) {
+    case types.length:
+      unitLabelType = unitLabels.length;
       break;
-    case props.types.weight:
-      unitType = props.unitLabels.weight;
+    case types.weight:
+      unitLabelType = unitLabels.weight;
       break;
-    case props.types.volume:
-      unitType = props.unitLabels.volume;
+    case types.volume:
+      unitLabelType = unitLabels.volume;
       break;
-    case props.types.temperature:
-      unitType = props.unitLabels.temperature;
+    case types.temperature:
+      unitLabelType = unitLabels.temperature;
       break;
     default:
-      unitType = props.unitLabels.length;
+      unitLabelType = unitLabels.length;
   }
-  let options = unitType.map((unitLabel, index)=> {
+
+  return unitLabelType;
+}
+
+function UnitInput(props) {
+  let unitLabelType = getUnitLabelTypeByMeasurementType(props.types, props.type, props.unitLabels);
+  let options = unitLabelType.map((unitLabel, index)=> {
     return <option key={index} value={index}>{unitLabel}</option>
   });
   return (
@@ -105,22 +157,42 @@ function MeasurementInput(props) {
   )
 }
 
+function getConversionLabelTypeByMeasurementType(types, type, conversionLabels) {
+  let conversionLabelType = 0;
+  switch (type) {
+    case types.length:
+      conversionLabelType = conversionLabels.length;
+      break;
+    case types.weight:
+      conversionLabelType = conversionLabels.weight;
+      break;
+    case types.volume:
+      conversionLabelType = conversionLabels.volume;
+      break;
+    case types.temperature:
+      conversionLabelType = conversionLabels.temperature;
+      break;
+    default:
+      conversionLabelType = conversionLabels.length;
+  }
+
+  return conversionLabelType;
+}
+
 function ConversionOutput(props) {
-  let conversions = getConversions(props.measurement, props.units, props.unit);
+  let conversionLabelType = getConversionLabelTypeByMeasurementType(props.types, props.type, props.conversionLabels);
+  let conversions = getConversions(props.measurement, props.types, props.type, props.units, props.unit);
+  let conversionOutput = conversionLabelType.map((label, index) => {
+    return (
+      <div key={index} style={{paddingBottom: 10, }}>
+        <span>{conversions[index]}</span>&nbsp;<span>{label}</span>
+      </div>
+    )
+  });
+
   return (
     <div style={{textAlign: 'left', marginLeft: '40%', marginRight: '40%', }}>
-      <div style={{paddingBottom: 10, }}>
-        <span>{conversions.kilometers}</span>&nbsp;<span>Kilometers</span>
-      </div>
-      <div style={{paddingBottom: 10, }}>
-        <span>{conversions.meters}</span>&nbsp;<span>Meters</span>
-      </div>
-      <div style={{paddingBottom: 10, }}>
-        <span>{conversions.centimeters}</span>&nbsp;<span>Centimeters</span>
-      </div>
-      <div style={{paddingBottom: 10, }}>
-        <span>{conversions.milimeters}</span>&nbsp;<span>Milimeters</span>
-      </div>
+      {conversionOutput}
     </div>
   )
 }

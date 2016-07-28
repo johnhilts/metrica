@@ -2,18 +2,28 @@ import React, { Component } from 'react';
 import Meter from '../components/Meter';
 
 class MeterContainer extends Component {
+
   types = {length: 0, weight: 1, volume: 2, temperature: 3, };
+
   units = {
     length: {inch: 0, foot: 1, mile: 2, },
     weight: {ounce: 0, pound: 1, ton: 2, },
     volume: {pint: 0, quart: 1, gallon: 2, },
     temperature: {fahrenheit: 0, },
   };
+
   unitLabels = {
     length: ['Inches', 'Feet', 'Miles', ],
     weight: ['Ounces', 'Pounds', 'Tons', ],
     volume: ['Pints', 'Quarts', 'Gallons', ],
     temperature: ['Fahrenheit', ],
+  };
+
+  conversionLabels = {
+    length: ['Kilometers', 'Meters', 'Centimeters', 'Milimeters', ],
+    weight: ['Kilograms', 'Grams', ],
+    volume: ['Liters', 'Mililiters', ],
+    temperature: ['Celsius', ],
   };
 
   constructor() {
@@ -50,6 +60,7 @@ class MeterContainer extends Component {
         unitLabels={this.unitLabels}
         types={this.types}
         type={this.state.type}
+        conversionLabels={this.conversionLabels}
       />
     )
   }
