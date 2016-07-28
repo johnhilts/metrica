@@ -38,15 +38,33 @@ function getMileConversions(measurement) {
 
 function getConversions(measurement, units, unit) {
   switch (unit) {
-    case units.inch:
+    case units.length.inch:
       return getInchConversions(measurement);
-    case units.foot:
+    case units.length.foot:
       return getFootConversions(measurement);
-    case units.mile:
+    case units.length.mile:
       return getMileConversions(measurement);
     default:
       return getInchConversions(measurement);
   }
+}
+
+function TypeInput(props) {
+  return (
+    <div>
+      <input type="radio" id="radLength" name="conversionType" defaultChecked="checked" defaultValue={props.types.length} onChange={props.onTypeChange} />
+      <label htmlFor="radLength">Length</label>
+      &nbsp; &nbsp;
+      <input type="radio" id="radWeight" name="conversionType" defaultValue={props.types.weight} onChange={props.onTypeChange} />
+      <label htmlFor="radWeight">Weight</label>
+      &nbsp; &nbsp;
+      <input type="radio" id="radVolume" name="conversionType" defaultValue={props.types.volume} onChange={props.onTypeChange} />
+      <label htmlFor="radVolume">Volume</label>
+      &nbsp; &nbsp;
+      <input type="radio" id="radTempurature" name="conversionType" defaultValue={props.types.temperature} onChange={props.onTypeChange} />
+      <label htmlFor="radTempurature">Temperature</label>
+    </div>
+  )
 }
 
 function MeasurementInput(props) {
@@ -55,9 +73,9 @@ function MeasurementInput(props) {
       <input type="text" placeholder="enter measurement" defaultValue={props.measurement} onChange={props.onMeasurementChange} />
       &nbsp;&nbsp;
       <select onChange={props.onUnitChange}>
-        <option value={props.units.inch}>Inches</option>
-        <option value={props.units.foot}>Feet</option>
-        <option value={props.units.mile}>Miles</option>
+        <option value={props.units.length.inch}>Inches</option>
+        <option value={props.units.length.foot}>Feet</option>
+        <option value={props.units.length.mile}>Miles</option>
       </select>
     </div>
   )
@@ -88,7 +106,9 @@ function ConversionOutput(props) {
 
 export default function Meter(props) {
   return (
-    <div>
+    <div style={{textAlign: 'center', marginLeft: 'auto' , marginRight: 'auto', paddingTop: '20%', paddingBottom: 0, }}>
+      <TypeInput {...props} />
+      <div>&nbsp;</div>
       <MeasurementInput {...props} />
       <div>&nbsp;</div>
       <ConversionOutput {...props} />
