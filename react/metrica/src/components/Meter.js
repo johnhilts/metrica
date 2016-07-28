@@ -67,16 +67,33 @@ function TypeInput(props) {
   )
 }
 
+function UnitInput(props) {
+  switch (props.type) {
+    case props.types.length:
+      return (
+        <select onChange={props.onUnitChange}>
+          <option value={props.units.length.inch}>Inches</option>
+          <option value={props.units.length.foot}>Feet</option>
+          <option value={props.units.length.mile}>Miles</option>
+        </select>
+      )
+    case props.types.weight:
+      return (
+        <select onChange={props.onUnitChange}>
+          <option value={props.units.weight.ounce}>Ounces</option>
+          <option value={props.units.weight.pound}>Pounds</option>
+          <option value={props.units.weight.ton}>Tons</option>
+        </select>
+      )
+  }
+}
+
 function MeasurementInput(props) {
   return (
     <div>
       <input type="text" placeholder="enter measurement" defaultValue={props.measurement} onChange={props.onMeasurementChange} />
       &nbsp;&nbsp;
-      <select onChange={props.onUnitChange}>
-        <option value={props.units.length.inch}>Inches</option>
-        <option value={props.units.length.foot}>Feet</option>
-        <option value={props.units.length.mile}>Miles</option>
-      </select>
+      <UnitInput {...props} />
     </div>
   )
 }
