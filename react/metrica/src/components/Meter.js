@@ -68,24 +68,31 @@ function TypeInput(props) {
 }
 
 function UnitInput(props) {
+  let unitType = 0;
   switch (props.type) {
     case props.types.length:
-      return (
-        <select onChange={props.onUnitChange}>
-          <option value={props.units.length.inch}>Inches</option>
-          <option value={props.units.length.foot}>Feet</option>
-          <option value={props.units.length.mile}>Miles</option>
-        </select>
-      )
+      unitType = props.unitLabels.length;
+      break;
     case props.types.weight:
-      return (
-        <select onChange={props.onUnitChange}>
-          <option value={props.units.weight.ounce}>Ounces</option>
-          <option value={props.units.weight.pound}>Pounds</option>
-          <option value={props.units.weight.ton}>Tons</option>
-        </select>
-      )
+      unitType = props.unitLabels.weight;
+      break;
+    case props.types.volume:
+      unitType = props.unitLabels.volume;
+      break;
+    case props.types.temperature:
+      unitType = props.unitLabels.temperature;
+      break;
+    default:
+      unitType = props.unitLabels.length;
   }
+  let options = unitType.map((unitLabel, index)=> {
+    return <option key={index} value={index}>{unitLabel}</option>
+  });
+  return (
+    <select onChange={props.onUnitChange}>
+      {options}
+    </select>
+  )
 }
 
 function MeasurementInput(props) {
@@ -99,10 +106,7 @@ function MeasurementInput(props) {
 }
 
 function ConversionOutput(props) {
-  let measurement = props.measurement;
-  let units = props.units;
-  let unit = props.unit;
-  let conversions = getConversions(measurement, units, unit);
+  let conversions = getConversions(props.measurement, props.units, props.unit);
   return (
     <div style={{textAlign: 'left', marginLeft: '40%', marginRight: '40%', }}>
       <div style={{paddingBottom: 10, }}>

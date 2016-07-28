@@ -9,6 +9,12 @@ class MeterContainer extends Component {
     volume: {pint: 0, quart: 1, gallon: 2, },
     temperature: {fahrenheit: 0, },
   };
+  unitLabels = {
+    length: ['Inches', 'Feet', 'Miles', ],
+    weight: ['Ounces', 'Pounds', 'Tons', ],
+    volume: ['Pints', 'Quarts', 'Gallons', ],
+    temperature: ['Fahrenheit', ],
+  };
 
   constructor() {
     super();
@@ -41,6 +47,7 @@ class MeterContainer extends Component {
         onTypeChange={this.handleTypeChange}
         units={this.units}
         unit={this.state.unit}
+        unitLabels={this.unitLabels}
         types={this.types}
         type={this.state.type}
       />
