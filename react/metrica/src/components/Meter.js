@@ -1,30 +1,63 @@
 import React from 'react';
 
+function getInchConversions(measurement) {
+  let milimeters = measurement * 25.4;
+  return (
+    {
+      milimeters: milimeters,
+      centimeters: milimeters / 100,
+      meters: milimeters / 1000,
+    }
+  )
+}
+
+function getFeetConversions(measurement) {
+  let meters = measurement * 0.3048;
+  return (
+    {
+      meters: meters,
+      centimeters: meters * 100,
+      milimeters: meters * 1000,
+    }
+  )
+}
+
+function getConversions(measurement, units, unit) {
+  switch (unit) {
+    case units.inches:
+      return getInchConversions(measurement);
+    case units.feet:
+      return getFeetConversions(measurement);
+    default:
+      return getInchConversions(measurement);
+  }
+}
+
 export default function Meter(props) {
   let measurement = props.measurement;
-  let milimeters = measurement * 25.4;
-  let centimeters = milimeters / 100;
-  let meters = milimeters / 1000;
+  let units = props.units;
+  let unit = props.unit;
+  let conversions = getConversions(measurement, units, unit);
   return (
     <div>
       <div>
-        <input type="text" placeholder="enter measurement" defaultValue={measurement} onChange={props.onChange} />
+        <input type="text" placeholder="enter measurement" defaultValue={measurement} onChange={props.onMeasurementChange} />
         &nbsp;&nbsp;
-        <select>
-          <option>Inches</option>
-          <option>Feet</option>
+        <select onChange={props.onUnitChange}>
+          <option value={units.inches}>Inches</option>
+          <option value={units.feet}>Feet</option>
         </select>
       </div>
       <div>&nbsp;</div>
       <div style={{textAlign: 'left', marginLeft: '40%', marginRight: '40%', }}>
         <div style={{paddingBottom: 10, }}>
-          <span>{meters}</span>&nbsp;<span>Meters</span>
+          <span>{conversions.meters}</span>&nbsp;<span>Meters</span>
         </div>
         <div style={{paddingBottom: 10, }}>
-          <span>{centimeters}</span>&nbsp;<span>Centimeters</span>
+          <span>{conversions.centimeters}</span>&nbsp;<span>Centimeters</span>
         </div>
         <div style={{paddingBottom: 10, }}>
-          <span>{milimeters}</span>&nbsp;<span>Milimeters</span>
+          <span>{conversions.milimeters}</span>&nbsp;<span>Milimeters</span>
         </div>
       </div>
     </div>
