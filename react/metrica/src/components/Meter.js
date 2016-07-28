@@ -7,6 +7,7 @@ function getInchConversions(measurement) {
       milimeters: milimeters,
       centimeters: milimeters / 100,
       meters: milimeters / 1000,
+      kilometers: milimeters / 1000000,
     }
   )
 }
@@ -18,6 +19,7 @@ function getFootConversions(measurement) {
       meters: meters,
       centimeters: meters * 100,
       milimeters: meters * 1000,
+      kilometers: meters / 1000,
     }
   )
 }
@@ -50,6 +52,9 @@ export default function Meter(props) {
       </div>
       <div>&nbsp;</div>
       <div style={{textAlign: 'left', marginLeft: '40%', marginRight: '40%', }}>
+        <div style={{paddingBottom: 10, }}>
+          <span>{conversions.kilometers}</span>&nbsp;<span>Kilometers</span>
+        </div>
         <div style={{paddingBottom: 10, }}>
           <span>{conversions.meters}</span>&nbsp;<span>Meters</span>
         </div>
