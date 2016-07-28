@@ -49,37 +49,49 @@ function getConversions(measurement, units, unit) {
   }
 }
 
-export default function Meter(props) {
+function MeasurementInput(props) {
+  return (
+    <div>
+      <input type="text" placeholder="enter measurement" defaultValue={props.measurement} onChange={props.onMeasurementChange} />
+      &nbsp;&nbsp;
+      <select onChange={props.onUnitChange}>
+        <option value={props.units.inch}>Inches</option>
+        <option value={props.units.foot}>Feet</option>
+        <option value={props.units.mile}>Miles</option>
+      </select>
+    </div>
+  )
+}
+
+function ConversionOutput(props) {
   let measurement = props.measurement;
   let units = props.units;
   let unit = props.unit;
   let conversions = getConversions(measurement, units, unit);
   return (
+    <div style={{textAlign: 'left', marginLeft: '40%', marginRight: '40%', }}>
+      <div style={{paddingBottom: 10, }}>
+        <span>{conversions.kilometers}</span>&nbsp;<span>Kilometers</span>
+      </div>
+      <div style={{paddingBottom: 10, }}>
+        <span>{conversions.meters}</span>&nbsp;<span>Meters</span>
+      </div>
+      <div style={{paddingBottom: 10, }}>
+        <span>{conversions.centimeters}</span>&nbsp;<span>Centimeters</span>
+      </div>
+      <div style={{paddingBottom: 10, }}>
+        <span>{conversions.milimeters}</span>&nbsp;<span>Milimeters</span>
+      </div>
+    </div>
+  )
+}
+
+export default function Meter(props) {
+  return (
     <div>
-      <div>
-        <input type="text" placeholder="enter measurement" defaultValue={measurement} onChange={props.onMeasurementChange} />
-        &nbsp;&nbsp;
-        <select onChange={props.onUnitChange}>
-          <option value={units.inch}>Inches</option>
-          <option value={units.foot}>Feet</option>
-          <option value={units.mile}>Miles</option>
-        </select>
-      </div>
+      <MeasurementInput {...props} />
       <div>&nbsp;</div>
-      <div style={{textAlign: 'left', marginLeft: '40%', marginRight: '40%', }}>
-        <div style={{paddingBottom: 10, }}>
-          <span>{conversions.kilometers}</span>&nbsp;<span>Kilometers</span>
-        </div>
-        <div style={{paddingBottom: 10, }}>
-          <span>{conversions.meters}</span>&nbsp;<span>Meters</span>
-        </div>
-        <div style={{paddingBottom: 10, }}>
-          <span>{conversions.centimeters}</span>&nbsp;<span>Centimeters</span>
-        </div>
-        <div style={{paddingBottom: 10, }}>
-          <span>{conversions.milimeters}</span>&nbsp;<span>Milimeters</span>
-        </div>
-      </div>
+      <ConversionOutput {...props} />
     </div>
   );
 }
