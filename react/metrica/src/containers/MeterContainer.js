@@ -2,14 +2,14 @@ import React, { Component } from 'react';
 import Meter from '../components/Meter';
 
 class MeterContainer extends Component {
-  units = {inches: 0, feet: 1, };
+  units = {inch: 0, foot: 1, };
 
   constructor() {
     super();
 
     this.state = {
       measurement: 1,
-      unit: this.units.inches,
+      unit: this.units.inch,
     }
   }
 

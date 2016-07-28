@@ -11,7 +11,7 @@ function getInchConversions(measurement) {
   )
 }
 
-function getFeetConversions(measurement) {
+function getFootConversions(measurement) {
   let meters = measurement * 0.3048;
   return (
     {
@@ -24,10 +24,10 @@ function getFeetConversions(measurement) {
 
 function getConversions(measurement, units, unit) {
   switch (unit) {
-    case units.inches:
+    case units.inch:
       return getInchConversions(measurement);
-    case units.feet:
-      return getFeetConversions(measurement);
+    case units.foot:
+      return getFootConversions(measurement);
     default:
       return getInchConversions(measurement);
   }
@@ -44,8 +44,8 @@ export default function Meter(props) {
         <input type="text" placeholder="enter measurement" defaultValue={measurement} onChange={props.onMeasurementChange} />
         &nbsp;&nbsp;
         <select onChange={props.onUnitChange}>
-          <option value={units.inches}>Inches</option>
-          <option value={units.feet}>Feet</option>
+          <option value={units.inch}>Inches</option>
+          <option value={units.foot}>Feet</option>
         </select>
       </div>
       <div>&nbsp;</div>
