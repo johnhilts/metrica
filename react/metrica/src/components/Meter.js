@@ -24,12 +24,26 @@ function getFootConversions(measurement) {
   )
 }
 
+function getMileConversions(measurement) {
+  let kilometers = measurement * 1.6093;
+  return (
+    {
+      kilometers: kilometers,
+      centimeters: kilometers * 100000,
+      milimeters: kilometers * 1000000,
+      meters: kilometers * 1000,
+    }
+  )
+}
+
 function getConversions(measurement, units, unit) {
   switch (unit) {
     case units.inch:
       return getInchConversions(measurement);
     case units.foot:
       return getFootConversions(measurement);
+    case units.mile:
+      return getMileConversions(measurement);
     default:
       return getInchConversions(measurement);
   }
@@ -48,6 +62,7 @@ export default function Meter(props) {
         <select onChange={props.onUnitChange}>
           <option value={units.inch}>Inches</option>
           <option value={units.foot}>Feet</option>
+          <option value={units.mile}>Miles</option>
         </select>
       </div>
       <div>&nbsp;</div>

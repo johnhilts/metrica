@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Meter from '../components/Meter';
 
 class MeterContainer extends Component {
-  units = {inch: 0, foot: 1, };
+  units = {inch: 0, foot: 1, mile: 2, };
 
   constructor() {
     super();
