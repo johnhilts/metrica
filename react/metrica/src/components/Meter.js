@@ -30,25 +30,29 @@ function getLengthConversion(measurement, units, unit) {
 }
 
 function getWeightConversion(measurement, units, unit) {
-  const getConversion = (measurement, factor) => {
-    let grams = measurement * factor;
+  const getConversion = (measurement, toMetricFactor, toUsFactor) => {
+    let grams = measurement * toMetricFactor;
+    let ounces = measurement * toUsFactor;
     return (
       [
         grams / 1000,
         grams,
+        ounces,
+        ounces * 0.06250,
+        ounces * 0.00003,
       ]
     )
   }
 
   switch (unit) {
     case units.weight.ounce:
-      return getConversion(measurement, 28.34952);
+      return getConversion(measurement, 28.34952, 1);
     case units.weight.pound:
-      return getConversion(measurement, 453.59232);
+      return getConversion(measurement, 453.59232, 16);
     case units.weight.ton:
-      return getConversion(measurement, 907184.64);
+      return getConversion(measurement, 907184.64, 32000);
     default:
-      return getConversion(measurement, 28.34952);
+      return getConversion(measurement, 28.34952, 1);
   }
 }
 
