@@ -1,27 +1,31 @@
 import React from 'react';
 
 function getLengthConversion(measurement, units, unit) {
-  const getConversion = (measurement, factor) => {
-    let meters = measurement * factor;
+  const getConversion = (measurement, toMetricFactor, toUsFactor) => {
+    let meters = measurement * toMetricFactor;
+    let inches = measurement * toUsFactor;
     return (
       [
         meters / 1000,
         meters,
         meters * 100,
         meters * 1000,
+        inches,
+        inches * 0.08333,
+        inches * 0.00002,
       ]
     )
   }
 
   switch (unit) {
     case units.length.inch:
-      return getConversion(measurement, 0.02540);
+      return getConversion(measurement, 0.02540, 1);
     case units.length.foot:
-      return getConversion(measurement, 0.30480);
+      return getConversion(measurement, 0.30480, 12);
     case units.length.mile:
-      return getConversion(measurement, 1609.34688);
+      return getConversion(measurement, 1609.34688, 63360.11354);
     default:
-      return getConversion(measurement, 0.02540);
+      return getConversion(measurement, 0.02540, 1);
   }
 }
 
