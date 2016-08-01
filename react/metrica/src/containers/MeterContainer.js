@@ -22,7 +22,7 @@ class MeterContainer extends Component {
   conversionLabels = {
     length: ['Kilometers', 'Meters', 'Centimeters', 'Milimeters', 'Inches', 'Feet', 'Miles', ],
     weight: ['Kilograms', 'Grams', 'Ounces', 'Pounds', 'Tons', ],
-    volume: ['Liters', 'Mililiters', ],
+    volume: ['Liters', 'Mililiters', 'Pints', 'Quarts', 'Gallons', ],
     temperature: ['Celsius', ],
   };
 

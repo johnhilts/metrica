@@ -57,25 +57,29 @@ function getWeightConversion(measurement, units, unit) {
 }
 
 function getVolumeConversion(measurement, units, unit) {
-  const getConversion = (measurement, factor) => {
-    let liter = measurement * factor;
+  const getConversion = (measurement, toMetricFactor, toUsFactor) => {
+    let liters = measurement * toMetricFactor;
+    let pints = measurement * toUsFactor;
     return (
       [
-        liter,
-        liter * 1000,
+        liters,
+        liters * 1000,
+        pints,
+        pints * 0.5,
+        pints * 0.125,
       ]
     )
   }
 
   switch (unit) {
     case units.volume.pint:
-      return getConversion(measurement, 0.47);
+      return getConversion(measurement, 0.47, 1);
     case units.volume.quart:
-      return getConversion(measurement, 0.96);
+      return getConversion(measurement, 0.96, 2);
     case units.volume.gallon:
-      return getConversion(measurement, 3.8);
+      return getConversion(measurement, 3.8, 8);
     default:
-      return getConversion(measurement, 0.47);
+      return getConversion(measurement, 0.47, 1);
   }
 }
 
