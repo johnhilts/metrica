@@ -1,18 +1,19 @@
 import React from 'react';
 
 function getLengthConversion(measurement, units, unit) {
+
   const getConversion = (measurement, toMetricFactor, toUsFactor) => {
     let meters = measurement * toMetricFactor;
     let inches = measurement * toUsFactor;
     return (
       [
+        inches,
+        inches * 0.08333,
+        inches * 0.00002,
         meters / 1000,
         meters,
         meters * 100,
         meters * 1000,
-        inches,
-        inches * 0.08333,
-        inches * 0.00002,
       ]
     )
   }
@@ -24,6 +25,14 @@ function getLengthConversion(measurement, units, unit) {
       return getConversion(measurement, 0.30480, 12);
     case units.length.mile:
       return getConversion(measurement, 1609.34688, 63360.11354);
+    case units.length.kilometer:
+      return getConversion(measurement, 1000, 39370.07874);
+    case units.length.meter:
+      return getConversion(measurement, 1, 39.37008);
+    case units.length.centimeter:
+      return getConversion(measurement, 0.01, 0.39370);
+    case units.length.milimeter:
+      return getConversion(measurement, 0.001, 0.03937);
     default:
       return getConversion(measurement, 0.02540, 1);
   }
@@ -35,11 +44,11 @@ function getWeightConversion(measurement, units, unit) {
     let ounces = measurement * toUsFactor;
     return (
       [
-        grams / 1000,
-        grams,
         ounces,
         ounces * 0.06250,
         ounces * 0.00003,
+        grams / 1000,
+        grams,
       ]
     )
   }
@@ -51,6 +60,10 @@ function getWeightConversion(measurement, units, unit) {
       return getConversion(measurement, 453.59232, 16);
     case units.weight.ton:
       return getConversion(measurement, 907184.64, 32000);
+    case units.weight.kilogram:
+      return getConversion(measurement, 1000, 35.27397);
+    case units.weight.gram:
+      return getConversion(measurement, 1, 0.03527);
     default:
       return getConversion(measurement, 28.34952, 1);
   }
@@ -62,11 +75,11 @@ function getVolumeConversion(measurement, units, unit) {
     let pints = measurement * toUsFactor;
     return (
       [
-        liters,
-        liters * 1000,
         pints,
         pints * 0.5,
         pints * 0.125,
+        liters,
+        liters * 1000,
       ]
     )
   }
@@ -78,18 +91,35 @@ function getVolumeConversion(measurement, units, unit) {
       return getConversion(measurement, 0.96, 2);
     case units.volume.gallon:
       return getConversion(measurement, 3.8, 8);
+    case units.volume.liter:
+      return getConversion(measurement, 1, 2.1);
+    case units.volume.mililiter:
+      return getConversion(measurement, 0.001, 0.0021);
     default:
       return getConversion(measurement, 0.47, 1);
   }
 }
 
-function getTemperatureConversion(measurement) {
-    let celsius = (measurement - 32) * 0.5555555;
+function getTemperatureConversion(measurement, units, unit) {
+  const getConversion = (measurement, isToMetric) => {
+    let celsius = isToMetric ? (measurement - 32) * 0.5555555 : measurement;
+    let fahrenheit = isToMetric ? measurement : (measurement * 1.8) + 32;
     return (
       [
+        fahrenheit,
         celsius,
       ]
     )
+  }
+
+  switch (unit) {
+    case units.temperature.fahrenheit:
+      return getConversion(measurement, true);
+    case units.temperature.celsius:
+      return getConversion(measurement, false);
+    default:
+      return getConversion(measurement, true);
+  }
 }
 
 function getConversions(measurement, types, type, units, unit) {
@@ -101,7 +131,7 @@ function getConversions(measurement, types, type, units, unit) {
     case types.volume:
       return getVolumeConversion(measurement, units, unit);
     case types.temperature:
-      return getTemperatureConversion(measurement);
+      return getTemperatureConversion(measurement, units, unit);
     default:
       return getLengthConversion(measurement, units, unit);
   }
@@ -169,30 +199,30 @@ function MeasurementInput(props) {
   )
 }
 
-function getConversionLabelTypeByMeasurementType(types, type, conversionLabels) {
+function getConversionLabelTypeByMeasurementType(types, type, unitLabels) {
   let conversionLabelType = 0;
   switch (type) {
     case types.length:
-      conversionLabelType = conversionLabels.length;
+      conversionLabelType = unitLabels.length;
       break;
     case types.weight:
-      conversionLabelType = conversionLabels.weight;
+      conversionLabelType = unitLabels.weight;
       break;
     case types.volume:
-      conversionLabelType = conversionLabels.volume;
+      conversionLabelType = unitLabels.volume;
       break;
     case types.temperature:
-      conversionLabelType = conversionLabels.temperature;
+      conversionLabelType = unitLabels.temperature;
       break;
     default:
-      conversionLabelType = conversionLabels.length;
+      conversionLabelType = unitLabels.length;
   }
 
   return conversionLabelType;
 }
 
 function ConversionOutput(props) {
-  let conversionLabelType = getConversionLabelTypeByMeasurementType(props.types, props.type, props.conversionLabels);
+  let conversionLabelType = getConversionLabelTypeByMeasurementType(props.types, props.type, props.unitLabels);
   let conversions = getConversions(props.measurement, props.types, props.type, props.units, props.unit);
   let conversionOutput = conversionLabelType.map((label, index) => {
     return (
